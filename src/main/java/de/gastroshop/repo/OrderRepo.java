@@ -1,7 +1,6 @@
 package de.gastroshop.repo;
 
 import de.gastroshop.model.Order;
-import de.gastroshop.model.Product;
 
 import java.util.ArrayList;
 import java.util.List;

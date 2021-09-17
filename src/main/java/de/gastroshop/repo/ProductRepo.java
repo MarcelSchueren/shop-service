@@ -30,6 +30,15 @@ public class ProductRepo {
         return this.availableProducts;
     }
 
+//    public Product get(int id) {
+//        for (Product product : availableProducts) {
+//            if (product.getId() == id) {
+//                return product;
+//            }
+//        }
+//        return null;
+//    }
+
     public Product get(int id) {
         for (Product product : availableProducts) {
             if (product.getId() == id) {
@@ -38,6 +47,7 @@ public class ProductRepo {
         }
         return null;
     }
+
 
     @Override
     public String toString() {

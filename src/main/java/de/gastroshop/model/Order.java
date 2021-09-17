@@ -18,7 +18,6 @@ public class Order {
         this.products.addAll(products);
     }
 
-
     public int getId() {
         return id;
     }

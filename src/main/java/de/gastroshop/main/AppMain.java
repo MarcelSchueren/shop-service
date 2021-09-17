@@ -4,6 +4,7 @@ import de.gastroshop.model.Product;
 import de.gastroshop.service.ShopService;
 
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class AppMain {
@@ -11,18 +12,22 @@ public class AppMain {
         ShopService shopService = new ShopService();
         System.out.println("\nWillkommen im GastroShop :)\n");
 
-        while (true){
+        while (true) {
             System.out.println("\nMenü:\n");
             System.out.println("Produktliste aufrufen - 1");
             System.out.println("Orderliste aufrufen - 2");
             System.out.println("Produkt anzeigen - 3");
-            System.out.println("Order anzeigen -4" );
+            System.out.println("Order anzeigen -4");
             System.out.println("Order anlegen -5");
             System.out.println("Programm beenden -6\n");
 
             Scanner scanner = new Scanner(System.in);
-            int choice = scanner.nextInt();
-
+            int choice = 0;
+            try {
+                choice = scanner.nextInt();
+            } catch (InputMismatchException e) {
+                System.err.println("Bitte nur Zahlen eingeben!");
+            }
             switch (choice) {
                 case 1:
                     System.out.println(shopService.listProducts());
@@ -32,28 +37,55 @@ public class AppMain {
                     break;
                 case 3:
                     System.out.println("Bitte Produkt-Id angeben: ");
-                    int id = scanner.nextInt();
-                    System.out.println(shopService.getProduct(id));
+
+                    try {
+                        int id = scanner.nextInt();
+                        if (shopService.getProduct(id) == null) {
+                            throw new IllegalArgumentException("Falsche Produkt-ID!");
+                        }
+                        System.out.println(shopService.getProduct(id));
+                    } catch (IllegalArgumentException | InputMismatchException e) {
+                        System.err.println("Bitte korrekte Produkt-ID eingeben!");
+                    }
                     break;
                 case 4:
                     System.out.println("Bitte Order-Id eingeben: ");
-                    int orderId = scanner.nextInt();
-                    System.out.println(shopService.getOrder(orderId));
+                    try {
+                        int orderId = scanner.nextInt();
+                        if (shopService.getOrder(orderId) == null) {
+                            throw new IllegalArgumentException("Falsche Order-ID!");
+                        }
+                        System.out.println(shopService.getOrder(orderId));
+                    } catch (IllegalArgumentException | InputMismatchException e) {
+                        System.err.println("Bitte korrekte Order-ID eingeben!");
+
+                    }
                     break;
                 case 5:
                     ArrayList<Product> orders = new ArrayList<>();
                     int productId;
                     do {
-                        System.out.println("Bitte Product-Id eingeben: (0 wenn Bestellung abgeschlossen) ");
+                        System.out.println("Bitte Produkt-Id eingeben: (0 wenn Bestellung abgeschlossen) ");
                         productId = scanner.nextInt();
-                        orders.add(shopService.getProduct(productId));
+                        if (checkIfProductIdIsValid(productId, shopService)) {
+                            orders.add(shopService.getProduct(productId));
+                        } else {
+                            System.out.println("Fehlerhafte ID!");
+                        }
                     }
                     while (productId != 0);
                     shopService.addOrder(orders);
                     break;
                 case 6:
                     System.exit(0);
+                default:
+                    System.out.println("Fehlerhafte Auswahl!");
+                    break;
             }
         }
+    }
+
+    private static boolean checkIfProductIdIsValid(int productId, ShopService shopService) {
+        return productId >= 0 && shopService.getProduct(productId) != null;
     }
 }
