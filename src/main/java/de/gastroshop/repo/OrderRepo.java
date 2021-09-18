@@ -1,29 +1,29 @@
 package de.gastroshop.repo;
 
 import de.gastroshop.model.Order;
-import de.gastroshop.model.Product;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class OrderRepo {
     private List<Order> orderList = new ArrayList<>();
 
-    public void add(Order order){
+    public void add(Order order) {
         orderList.add(order);
     }
 
-    public List<Order> list(){
+    public List<Order> list() {
         return this.orderList;
     }
 
-    public Order get(int id){
+    public Optional<Order> get(int id) {
         for (Order order : orderList) {
-            if (order.getId() == id){
-                return order;
+            if (order.getId() == id) {
+                return Optional.of(order);
             }
         }
-        return null;
+        return Optional.empty();
     }
 
     @Override

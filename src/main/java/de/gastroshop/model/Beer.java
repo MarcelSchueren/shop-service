@@ -1,5 +1,7 @@
 package de.gastroshop.model;
 
+import java.util.Objects;
+
 public class Beer implements Product {
 
     String name;
@@ -55,5 +57,18 @@ public class Beer implements Product {
     @Override
     public String toString() {
         return "Product ID: " + id + " Beer: " + name + ", " + type + ", " + price + " Euro\n";
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Beer beer = (Beer) o;
+        return id == beer.id && Double.compare(beer.price, price) == 0 && Objects.equals(name, beer.name) && Objects.equals(type, beer.type);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, type, id, price);
     }
 }
