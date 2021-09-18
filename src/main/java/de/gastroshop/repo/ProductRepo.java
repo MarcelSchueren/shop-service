@@ -6,6 +6,7 @@ import de.gastroshop.model.Product;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class ProductRepo {
     private List<Product> availableProducts = new ArrayList<>();
@@ -30,31 +31,20 @@ public class ProductRepo {
         return this.availableProducts;
     }
 
-//    public Product get(int id) {
-//        for (Product product : availableProducts) {
-//            if (product.getId() == id) {
-//                return product;
-//            }
-//        }
-//        return null;
-//    }
-
-    public Product get(int id) {
+    public Optional<Product> get(int id) {
         for (Product product : availableProducts) {
             if (product.getId() == id) {
-                return product;
+                return Optional.of(product);
             }
         }
-        return null;
+        return Optional.empty();
     }
-
 
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         for (Product availableProduct : availableProducts) {
             sb.append(availableProduct.toString());
-            //sb.append("\n");
         }
         return sb.toString();
     }

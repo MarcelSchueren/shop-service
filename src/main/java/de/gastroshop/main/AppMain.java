@@ -8,6 +8,7 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class AppMain {
+    @SuppressWarnings("OptionalGetWithoutIsPresent") //vgl Z. 72f
     public static void main(String[] args) {
         ShopService shopService = new ShopService();
         System.out.println("\nWillkommen im GastroShop :)\n");
@@ -15,11 +16,11 @@ public class AppMain {
         while (true) {
             System.out.println("\nMenü:\n");
             System.out.println("Produktliste aufrufen - 1");
-            System.out.println("Orderliste aufrufen - 2");
-            System.out.println("Produkt anzeigen - 3");
-            System.out.println("Order anzeigen -4");
-            System.out.println("Order anlegen -5");
-            System.out.println("Programm beenden -6\n");
+            System.out.println("Orderliste aufrufen   - 2");
+            System.out.println("Produkt anzeigen      - 3");
+            System.out.println("Order anzeigen        - 4");
+            System.out.println("Order anlegen         - 5");
+            System.out.println("Programm beenden      - 6\n");
 
             Scanner scanner = new Scanner(System.in);
             int choice = 0;
@@ -40,7 +41,7 @@ public class AppMain {
 
                     try {
                         int id = scanner.nextInt();
-                        if (shopService.getProduct(id) == null) {
+                        if (!shopService.getProduct(id).isPresent()) {
                             throw new IllegalArgumentException("Falsche Produkt-ID!");
                         }
                         System.out.println(shopService.getProduct(id));
@@ -52,10 +53,10 @@ public class AppMain {
                     System.out.println("Bitte Order-Id eingeben: ");
                     try {
                         int orderId = scanner.nextInt();
-                        if (shopService.getOrder(orderId) == null) {
+                        if (!shopService.getOrder(orderId).isPresent()) {
                             throw new IllegalArgumentException("Falsche Order-ID!");
                         }
-                        System.out.println(shopService.getOrder(orderId));
+                        System.out.println(shopService.getOrder(orderId).get());
                     } catch (IllegalArgumentException | InputMismatchException e) {
                         System.err.println("Bitte korrekte Order-ID eingeben!");
 
@@ -68,9 +69,12 @@ public class AppMain {
                         System.out.println("Bitte Produkt-Id eingeben: (0 wenn Bestellung abgeschlossen) ");
                         productId = scanner.nextInt();
                         if (checkIfProductIdIsValid(productId, shopService)) {
-                            orders.add(shopService.getProduct(productId));
+                            //Check des Optional erfolgt in darüberliegender Zeile
+                            orders.add(shopService.getProduct(productId).get());
                         } else {
-                            System.out.println("Fehlerhafte ID!");
+                            if (productId != 0) {
+                                System.out.println("Fehlerhafte ID!");
+                            }
                         }
                     }
                     while (productId != 0);
@@ -86,6 +90,6 @@ public class AppMain {
     }
 
     private static boolean checkIfProductIdIsValid(int productId, ShopService shopService) {
-        return productId >= 0 && shopService.getProduct(productId) != null;
+        return productId >= 0 && shopService.getProduct(productId).isPresent();
     }
 }

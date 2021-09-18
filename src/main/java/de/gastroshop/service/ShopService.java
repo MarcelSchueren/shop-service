@@ -6,6 +6,7 @@ import de.gastroshop.repo.OrderRepo;
 import de.gastroshop.repo.ProductRepo;
 
 import java.util.List;
+import java.util.Optional;
 
 public class ShopService {
 
@@ -13,7 +14,7 @@ public class ShopService {
     OrderRepo orderRepo = new OrderRepo();
     int idForOrders = 1;
 
-    public Product getProduct(int id) {
+    public Optional<Product> getProduct(int id) {
         return productRepo.get(id);
     }
 
@@ -21,7 +22,7 @@ public class ShopService {
         return productRepo.toString();
     }
 
-    public Order getOrder(int id) {
+    public Optional<Order> getOrder(int id) {
         return orderRepo.get(id);
     }
 
